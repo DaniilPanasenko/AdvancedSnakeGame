@@ -5,6 +5,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255,255,0)
 
 class Pixel(pygame.sprite.Sprite):
     def __init__(self, x,y):
@@ -22,3 +23,9 @@ class Pixel(pygame.sprite.Sprite):
             self.image.fill(WHITE)
         if self.color==2:
             self.image.fill(GREEN)
+        if self.color==3:
+            self.image.fill(RED)
+        if self.color==4:
+            self.image.fill(YELLOW)
+        if self.color==5:
+            self.image.fill(BLUE)
