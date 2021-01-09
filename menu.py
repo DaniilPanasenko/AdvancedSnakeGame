@@ -1,12 +1,5 @@
 import alphabet
-
-
-def append_row(arr, width):
-    internal_arr = []
-    for j in range(width):
-        internal_arr.append(0)
-    arr.append(internal_arr)
-    return arr
+import library
 
 
 class Menu:
@@ -28,21 +21,21 @@ class Menu:
             if len(item[0]) + 3 > width:
                 width = len(item[0]) + 3
         result_arr = []
-        result_arr = append_row(result_arr, width)
+        result_arr = library.append_row(result_arr, width)
         for item in arr:
-            result_arr = append_row(result_arr, width)
+            result_arr = library.append_row(result_arr, width)
             for row in item:
-                result_arr = append_row(result_arr, width)
+                result_arr = library.append_row(result_arr, width)
                 for i in range(len(row)):
                     result_arr[len(result_arr) - 1][i + 2] = row[i]
-            result_arr = append_row(result_arr, width)
-            result_arr = append_row(result_arr, width)
+            result_arr = library.append_row(result_arr, width)
+            result_arr = library.append_row(result_arr, width)
         return result_arr
 
-    def change_active(self, isUp):
-        if isUp and self.active != 0:
+    def change_active(self, is_up):
+        if is_up and self.active != 0:
             self.active = self.active - 1
-        if not isUp and self.active != len(self.items) - 1:
+        if not is_up and self.active != len(self.items) - 1:
             self.active = self.active + 1
         self.pixels = self.set_pixels()
 

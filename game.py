@@ -6,6 +6,7 @@ import keyboard
 import pygame
 import pixel
 import settings
+import play
 
 
 class Game:
@@ -16,9 +17,8 @@ class Game:
         self.fps = fps
         self.one_pixel = one_pixel
         self.pixels = []
-        self.pages=[]
-        self.settings=settings.Settings(True)
-
+        self.pages = []
+        self.settings = settings.Settings(True)
 
     def initial_frame(self):
         pygame.init()
@@ -54,6 +54,8 @@ class Game:
                         self.handle_menu(event.key)
                     elif self.settings.isActive:
                         self.handle_settings(event.key)
+                    elif self.play.isActive:
+                        self.handle_play(event.key)
 
             self.drawing()
 
@@ -80,14 +82,23 @@ class Game:
             self.board.delete_element('settings')
             self.transition_by_menu()
 
+    def handle_play(self, key):
+        self.play.press_key(key)
+        self.board.delete_element('play')
+        self.board.add_element('play',
+                               int((self.board.rows - len(self.play.get_pixels())) / 2),
+                               int((self.board.columns - len(self.play.get_pixels()[0])) / 2),
+                               self.play.get_pixels())
 
     def handle_menu(self, key):
         if key == pygame.K_DOWN:
             self.active_menu.change_active(False)
-            self.board.add_element('menu', 30, int((self.board.columns - len(self.active_menu.pixels[0])) / 2), self.active_menu.pixels)
+            self.board.add_element('menu', 30, int((self.board.columns - len(self.active_menu.pixels[0])) / 2),
+                                   self.active_menu.pixels)
         elif key == pygame.K_UP:
             self.active_menu.change_active(True)
-            self.board.add_element('menu', 30, int((self.board.columns - len(self.active_menu.pixels[0])) / 2), self.active_menu.pixels)
+            self.board.add_element('menu', 30, int((self.board.columns - len(self.active_menu.pixels[0])) / 2),
+                                   self.active_menu.pixels)
         elif key == pygame.K_RETURN:
             self.active_menu.dispose()
             self.board.delete_element('menu')
@@ -95,32 +106,42 @@ class Game:
             self.transition_by_menu()
 
     def transition_by_menu(self):
-        if len(self.pages)==0:
-            self.active_menu = self.add_menu(['NEW GAME','CONTINUE','EXIT'])
+        if len(self.pages) == 0:
+            self.active_menu = self.add_menu(['NEW GAME', 'CONTINUE', 'EXIT'])
         else:
-            page = self.pages[len(self.pages)-1]
-            if page=='EXIT':
+            page = self.pages[len(self.pages) - 1]
+            if page == 'EXIT':
                 pygame.quit()
-            if page=='NEW GAME':
-                self.active_menu = self.add_menu(['SINGLE PLAYER', 'MULTI PLAYER','BACK'])
-            if page=='MULTI PLAYER':
-                self.active_menu = self.add_menu(['START', 'SETTINGS','BACK'])
+            if page == 'NEW GAME':
+                self.active_menu = self.add_menu(['SINGLE PLAYER', 'MULTI PLAYER', 'BACK'])
+            if page == 'MULTI PLAYER':
+                self.active_menu = self.add_menu(['START', 'SETTINGS', 'BACK'])
             if page == 'SINGLE PLAYER':
                 self.active_menu = self.add_menu(['START', 'SETTINGS', 'BACK'])
             if page == 'SETTINGS':
-                if self.pages[len(self.pages)-2]=='SINGLE PLAYER' and not self.settings.isSinglePlayer:
+                if self.pages[len(self.pages) - 2] == 'SINGLE PLAYER' and not self.settings.isSinglePlayer:
                     self.settings = settings.Settings(True)
-                if self.pages[len(self.pages)-2]=='MULTI PLAYER' and self.settings.isSinglePlayer:
+                if self.pages[len(self.pages) - 2] == 'MULTI PLAYER' and self.settings.isSinglePlayer:
                     self.settings = settings.Settings(False)
                 self.settings.isActive = True
-                self.settings.active_element=0
+                self.settings.active_element = 0
                 arr = alphabet.translate_with_zoom('SNAKE', 2)
                 self.board.add_element('logo', 10, int((self.board.columns - len(arr[0])) / 2), arr)
-                self.board.add_element('settings', 25, int((self.board.columns - len(self.settings.get_pixels()[0])) / 2),
+                self.board.add_element('settings', 25,
+                                       int((self.board.columns - len(self.settings.get_pixels()[0])) / 2),
                                        self.settings.get_pixels())
-            if page=='BACK':
+            if page == 'BACK':
                 self.pages.pop()
                 self.pages.pop()
                 self.transition_by_menu()
-
-
+            if page == 'START':
+                if self.pages[len(self.pages) - 2] == 'SINGLE PLAYER' and not self.settings.isSinglePlayer:
+                    self.settings = settings.Settings(True)
+                if self.pages[len(self.pages) - 2] == 'MULTI PLAYER' and self.settings.isSinglePlayer:
+                    self.settings = settings.Settings(False)
+                self.board.delete_element('logo')
+                self.play = play.Play(self.columns, self.rows, self.settings)
+                self.board.add_element('play',
+                                       int((self.board.rows - len(self.play.get_pixels())) / 2),
+                                       int((self.board.columns - len(self.play.get_pixels()[0])) / 2),
+                                       self.play.get_pixels())
