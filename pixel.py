@@ -7,6 +7,10 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
+WATER = (0,191,255)
+STONE = (128,128,128)
+LAVA = (255,117,24)
+
 
 class Pixel(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -29,4 +33,24 @@ class Pixel(pygame.sprite.Sprite):
         if self.color == 4:
             self.image.fill(YELLOW)
         if self.color == 5:
+            self.image.fill(BLUE)
+
+        if self.color == 10:
+            self.image.fill(WATER)
+        if self.color == 11:
+            self.image.fill(LAVA)
+        if self.color == 12:
+            self.image.fill(STONE)
+
+        if self.color == 20:
+            self.image.fill(GREEN)
+        if self.color == 21:
+            self.image.fill(YELLOW)
+        if self.color == 22:
+            self.image.fill(BLUE)
+        if self.color == 23:
+            self.image.fill(RED)
+        if self.color == 24:
+            self.image.fill(RED)
+        if self.color == 25:
             self.image.fill(BLUE)
