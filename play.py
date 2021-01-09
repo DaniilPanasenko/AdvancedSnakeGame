@@ -3,6 +3,7 @@ import player
 import library
 import biom
 import pygame
+import snake
 
 
 class Play:
@@ -11,21 +12,29 @@ class Play:
         self.board_size = self.get_init_size(height)
         self.game = game
         self.isActive = True
-        self.players = self.get_init_players()
         self.biom = biom.Biom(self.board_size, self.settings.items['BIOMES'])
+        self.players, self.snakes = self.get_init_players()
+
 
     def run(self):
         while True:
             self.game.clock.tick(5)
             events = pygame.event.get()
-            keydown=None
+            keydown1=None
+            keydown2 = None
             for ev in events:
                 if ev.type == pygame.QUIT:
                     self.quit()
                 elif ev.type == pygame.KEYDOWN:
-                    keydown=ev
-            if not keydown is None:
-                self.press_key(keydown.key)
+                    if ev.key==pygame.K_RIGHT or ev.key==pygame.K_LEFT or ev.key==pygame.K_UP or ev.key==pygame.K_DOWN:
+                        keydown1=ev
+                    if ev.key==pygame.K_a or ev.key==pygame.K_s or ev.key==pygame.K_w or ev.key==pygame.K_d:
+                        keydown2=ev
+            if not keydown1 is None:
+                self.press_key(keydown1.key)
+            if not keydown2 is None:
+                self.press_key(keydown2.key)
+            self.update()
             self.draw()
             self.game.drawing()
 
@@ -36,9 +45,30 @@ class Play:
                                     int((self.game.board.columns - len(self.get_pixels()[0])) / 2),
                                     self.get_pixels())
 
+    def update(self):
+        for sn in self.snakes:
+            sn.update()
+
     def press_key(self, key):
         if key ==pygame.K_ESCAPE:
             self.quit()
+        if key ==pygame.K_UP:
+            self.snakes[0].change_direction(0)
+        if key ==pygame.K_RIGHT:
+            self.snakes[0].change_direction(1)
+        if key ==pygame.K_DOWN:
+            self.snakes[0].change_direction(2)
+        if key ==pygame.K_LEFT:
+            self.snakes[0].change_direction(3)
+        if not self.settings.isSinglePlayer:
+            if key == pygame.K_w:
+                self.snakes[1].change_direction(0)
+            if key == pygame.K_d:
+                self.snakes[1].change_direction(1)
+            if key == pygame.K_s:
+                self.snakes[1].change_direction(2)
+            if key == pygame.K_a:
+                self.snakes[1].change_direction(3)
 
     def quit(self):
         pygame.quit()
@@ -47,6 +77,7 @@ class Play:
         arr = self.get_init_board()
         arr = library.concat_array_to_right(arr, self.get_table())
         arr = self.get_biomes(arr)
+        arr = self.get_snakes(arr)
         return arr
 
     def get_init_size(self, height):
@@ -55,15 +86,20 @@ class Play:
         return min_size + int((max_size - min_size) * self.settings.items['SIZE'] / 10)
 
     def get_init_players(self):
-        arr = []
+        players = []
+        snakes = []
         if self.settings.isSinglePlayer:
-            arr.append(player.Player('ME', True, 20))
+            snakes.append(snake.Snake(self, 20))
+            players.append(player.Player('ME', True, 20,snakes[len(snakes)-1]))
             for i in range(self.settings.items['BOTS']):
-                arr.append(player.Player('BOT ' + str(i + 1), True, i + 21))
+                snakes.append(snake.Snake(self, i + 21))
+                players.append(player.Player('BOT ' + str(i + 1), True, i + 21,snakes[len(snakes)-1]))
         else:
-            arr.append(player.Player(self.settings.items['P1'], False, 24))
-            arr.append(player.Player(self.settings.items['P2'], False, 25))
-        return arr
+            snakes.append(snake.Snake(self, 24))
+            players.append(player.Player(self.settings.items['P1'], False, 24,snakes[len(snakes)-1]))
+            snakes.append(snake.Snake(self, 25))
+            players.append(player.Player(self.settings.items['P2'], False, 25,snakes[len(snakes)-1]))
+        return players, snakes
 
     def get_table(self):
         arr = []
@@ -74,6 +110,12 @@ class Play:
     def get_biomes(self, arr):
         for new_cell in self.biom.cells:
             arr = self.add_cell(arr, new_cell)
+        return arr
+
+    def get_snakes(self,arr):
+        for snake in self.snakes:
+            for new_cell in snake.segments:
+                arr = self.add_cell(arr, new_cell)
         return arr
 
     def add_cell(self, arr, new_cell):
