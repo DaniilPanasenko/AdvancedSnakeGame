@@ -54,8 +54,6 @@ class Game:
                         self.handle_menu(event.key)
                     elif self.settings.isActive:
                         self.handle_settings(event.key)
-                    elif self.play.isActive:
-                        self.handle_play(event.key)
 
             self.drawing()
 
@@ -81,14 +79,6 @@ class Game:
             self.pages.pop()
             self.board.delete_element('settings')
             self.transition_by_menu()
-
-    def handle_play(self, key):
-        self.play.press_key(key)
-        self.board.delete_element('play')
-        self.board.add_element('play',
-                               int((self.board.rows - len(self.play.get_pixels())) / 2),
-                               int((self.board.columns - len(self.play.get_pixels()[0])) / 2),
-                               self.play.get_pixels())
 
     def handle_menu(self, key):
         if key == pygame.K_DOWN:
@@ -140,8 +130,5 @@ class Game:
                 if self.pages[len(self.pages) - 2] == 'MULTI PLAYER' and self.settings.isSinglePlayer:
                     self.settings = settings.Settings(False)
                 self.board.delete_element('logo')
-                self.play = play.Play(self.columns, self.rows, self.settings)
-                self.board.add_element('play',
-                                       int((self.board.rows - len(self.play.get_pixels())) / 2),
-                                       int((self.board.columns - len(self.play.get_pixels()[0])) / 2),
-                                       self.play.get_pixels())
+                self.play = play.Play(self.rows, self.settings, self)
+                self.play.run()

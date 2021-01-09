@@ -65,9 +65,9 @@ class Biom:
             biomes = new_biomes
 
     def generate(self):
-        self.get_biom(10)
-        self.get_biom(11)
         self.get_biom(12)
+        self.get_biom(11)
+        self.get_biom(10)
 
     def check_cell(self, new_cell):
         if new_cell.x < 0 or new_cell.y < 0 or new_cell.x >= self.size or new_cell.y >= self.size:

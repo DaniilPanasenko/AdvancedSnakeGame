@@ -28,9 +28,10 @@ class Board:
                 self.board[i + x][j + y].color = arr[i][j]
 
     def delete_element(self, name):
-        element = self.elements[name]
-        for i in range(element.height):
-            for j in range(element.width):
-                self.board[i + element.x][j + element.y].color = 0
-        self.elements.pop(name)
+        if name in self.elements:
+            element = self.elements[name]
+            for i in range(element.height):
+                for j in range(element.width):
+                    self.board[i + element.x][j + element.y].color = 0
+            self.elements.pop(name)
 
