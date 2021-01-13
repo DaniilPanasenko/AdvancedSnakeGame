@@ -54,3 +54,7 @@ class Pixel(pygame.sprite.Sprite):
             self.image.fill(RED)
         if self.color == 25:
             self.image.fill(BLUE)
+
+        if self.color == 30:
+            self.image.fill(RED)
+

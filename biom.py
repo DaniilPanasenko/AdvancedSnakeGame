@@ -1,6 +1,9 @@
 import random
 import cell
 
+STONE=12
+LAVA=11
+WATER=10
 
 def get_cell_by_side(old_cell, side):
     new_cell = cell.Cell(old_cell.x, old_cell.y, old_cell.value)
@@ -65,9 +68,9 @@ class Biom:
             biomes = new_biomes
 
     def generate(self):
-        self.get_biom(12)
-        self.get_biom(11)
-        self.get_biom(10)
+        self.get_biom(STONE)
+        self.get_biom(LAVA)
+        self.get_biom(WATER)
 
     def check_cell(self, new_cell):
         if new_cell.x < 0 or new_cell.y < 0 or new_cell.x >= self.size or new_cell.y >= self.size:

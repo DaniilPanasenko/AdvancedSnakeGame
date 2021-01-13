@@ -4,6 +4,7 @@ import library
 import biom
 import pygame
 import snake
+import spells
 
 
 class Play:
@@ -14,6 +15,7 @@ class Play:
         self.isActive = True
         self.biom = biom.Biom(self.board_size, self.settings.items['BIOMES'])
         self.players, self.snakes = self.get_init_players()
+        self.spells = spells.Spells(self)
 
 
     def run(self):
@@ -48,6 +50,10 @@ class Play:
     def update(self):
         for sn in self.snakes:
             sn.update()
+        for sn in self.snakes:
+            sn.check_state()
+        self.spells.update()
+
 
     def press_key(self, key):
         if key ==pygame.K_ESCAPE:
@@ -78,6 +84,7 @@ class Play:
         arr = library.concat_array_to_right(arr, self.get_table())
         arr = self.get_biomes(arr)
         arr = self.get_snakes(arr)
+        arr = self.get_spells(arr)
         return arr
 
     def get_init_size(self, height):
@@ -116,6 +123,11 @@ class Play:
         for snake in self.snakes:
             for new_cell in snake.segments:
                 arr = self.add_cell(arr, new_cell)
+        return arr
+
+    def get_spells(self,arr):
+        for spell in self.spells.spells:
+            arr = self.add_cell(arr, spell.cell)
         return arr
 
     def add_cell(self, arr, new_cell):
