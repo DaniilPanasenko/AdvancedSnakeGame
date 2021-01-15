@@ -120,8 +120,14 @@ class Play:
 
     def get_table(self):
         arr = []
+        width=0
         for i in range(len(self.players)):
+            width = max(width,len(self.players[i].get_pixels()[0]))
             arr = library.concat_array_to_bottom(arr, self.players[i].get_pixels())
+        for i in range(len(arr)):
+            to_add=width-len(arr[i])
+            for j in range(to_add):
+                arr[i].append(0)
         return arr
 
     def get_biomes(self, arr):
