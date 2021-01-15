@@ -19,6 +19,7 @@ class Game:
         self.pixels = []
         self.pages = []
         self.settings = settings.Settings(True)
+        self.play=None
 
     def initial_frame(self):
         pygame.init()
@@ -95,6 +96,16 @@ class Game:
             self.pages.append(self.active_menu.items[self.active_menu.active])
             self.transition_by_menu()
 
+    def play_run(self):
+        self.play.run()
+        if self.play.is_stopped:
+            self.board.delete_element('play')
+            self.active_menu = self.add_menu(['RETURN', 'RESTART', 'SAVE', 'EXIT'])
+        if self.play.game_over:
+            self.board.delete_element('play')
+            self.active_menu = self.add_menu(['RETURN', 'RESTART', 'SAVE', 'EXIT'])
+
+
     def transition_by_menu(self):
         if len(self.pages) == 0:
             self.active_menu = self.add_menu(['NEW GAME', 'CONTINUE', 'EXIT'])
@@ -131,4 +142,13 @@ class Game:
                     self.settings = settings.Settings(False)
                 self.board.delete_element('logo')
                 self.play = play.Play(self.rows, self.settings, self)
-                self.play.run()
+                self.play_run()
+            if page=='RETURN':
+                self.board.delete_element('logo')
+                self.play.is_stopped=False
+                self.play_run()
+            if page=='RESTART':
+                self.board.delete_element('logo')
+                self.play = play.Play(self.rows, self.settings, self)
+                self.play_run()
+

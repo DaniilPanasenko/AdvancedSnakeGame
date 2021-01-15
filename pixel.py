@@ -11,7 +11,6 @@ WATER = (0,191,255)
 STONE = (128,128,128)
 LAVA = (255,117,24)
 
-
 class Pixel(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)

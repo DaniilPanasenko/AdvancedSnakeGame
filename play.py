@@ -12,22 +12,29 @@ class Play:
         self.settings = settings
         self.board_size = self.get_init_size(height)
         self.game = game
-        self.isActive = True
+        self.is_active = True
         self.biom = biom.Biom(self.board_size, self.settings.items['BIOMES'])
         self.players, self.snakes = self.get_init_players()
         self.spells = spells.Spells(self)
+        self.is_stopped = False
+        self.game_over=False
 
 
     def run(self):
         while True:
+            if self.game_over:
+                return
             self.game.clock.tick(5)
             events = pygame.event.get()
             keydown1=None
             keydown2 = None
             for ev in events:
                 if ev.type == pygame.QUIT:
-                    self.quit()
+                    pygame.quit()
                 elif ev.type == pygame.KEYDOWN:
+                    if ev.key==pygame.K_ESCAPE:
+                        self.is_stopped = True
+                        return
                     if ev.key==pygame.K_RIGHT or ev.key==pygame.K_LEFT or ev.key==pygame.K_UP or ev.key==pygame.K_DOWN:
                         keydown1=ev
                     if ev.key==pygame.K_a or ev.key==pygame.K_s or ev.key==pygame.K_w or ev.key==pygame.K_d:
@@ -48,16 +55,22 @@ class Play:
                                     self.get_pixels())
 
     def update(self):
+        if self.check_game_over():
+            self.game_over=True
+            return
         for sn in self.snakes:
             sn.update()
         for sn in self.snakes:
             sn.check_state()
         self.spells.update()
 
+    def check_game_over(self):
+        for sn in self.snakes:
+            if not sn.isDied:
+                return False
+        return True
 
     def press_key(self, key):
-        if key ==pygame.K_ESCAPE:
-            self.quit()
         if key ==pygame.K_UP:
             self.snakes[0].change_direction(0)
         if key ==pygame.K_RIGHT:
@@ -75,9 +88,6 @@ class Play:
                 self.snakes[1].change_direction(2)
             if key == pygame.K_a:
                 self.snakes[1].change_direction(3)
-
-    def quit(self):
-        pygame.quit()
 
     def get_pixels(self):
         arr = self.get_init_board()
