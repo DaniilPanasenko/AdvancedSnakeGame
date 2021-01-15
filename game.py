@@ -20,6 +20,7 @@ class Game:
         self.pages = []
         self.settings = settings.Settings(True)
         self.play=None
+        self.game_over=False
 
     def initial_frame(self):
         pygame.init()
@@ -51,7 +52,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.KEYDOWN:
-                    if self.active_menu.isActive:
+                    if self.game_over and event.key==pygame.K_RETURN:
+                        self.enter_game_over()
+                    elif self.active_menu.isActive:
                         self.handle_menu(event.key)
                     elif self.settings.isActive:
                         self.handle_settings(event.key)
@@ -64,6 +67,12 @@ class Game:
         self.all_sprites.draw(self.screen)
         pygame.display.flip()
 
+    def enter_game_over(self):
+        self.board.delete_element('game_over')
+        self.board.delete_element('results')
+        self.pages = []
+        self.transition_by_menu()
+        self.game_over=False
     def add_menu(self, items):
         arr = alphabet.translate_with_zoom('SNAKE', 2)
         self.board.add_element('logo', 10, int((self.board.columns - len(arr[0])) / 2), arr)
@@ -100,10 +109,15 @@ class Game:
         self.play.run()
         if self.play.is_stopped:
             self.board.delete_element('play')
-            self.active_menu = self.add_menu(['RETURN', 'RESTART', 'SAVE', 'EXIT'])
+            self.active_menu = self.add_menu(['RETURN', 'RESTART', 'SAVE', 'MENU','EXIT'])
         if self.play.game_over:
             self.board.delete_element('play')
-            self.active_menu = self.add_menu(['RETURN', 'RESTART', 'SAVE', 'EXIT'])
+            arr = alphabet.translate_with_zoom('GAME OVER', 3)
+            self.board.add_element('game_over', 10, int((self.board.columns - len(arr[0])) / 2), arr)
+            results=self.play.get_table()
+            self.board.add_element('results', 30, int((self.board.columns - len(results[0])) / 2),
+                                   results)
+            self.game_over=True
 
 
     def transition_by_menu(self):
@@ -151,4 +165,7 @@ class Game:
                 self.board.delete_element('logo')
                 self.play = play.Play(self.rows, self.settings, self)
                 self.play_run()
+            if page=='MENU':
+                self.pages=[]
+                self.transition_by_menu()
 

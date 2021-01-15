@@ -44,12 +44,12 @@ class Snake:
             if self.check_stone_hit(head) or self.check_snake_hit(head):
                 self.isDied=True
                 self.segments=[]
-            if self.check_lava_hit(head):
+            elif self.check_lava_hit(head):
                 self.segments.pop()
                 self.points=self.points-1
                 if len(self.segments)==0:
                     self.isDied = True
-            if self.check_water_hit(head):
+            elif self.check_water_hit(head):
                 if self.snail==0:
                     self.snail=3
                 else:

@@ -121,9 +121,27 @@ class Play:
     def get_table(self):
         arr = []
         width=0
-        for i in range(len(self.players)):
-            width = max(width,len(self.players[i].get_pixels()[0]))
-            arr = library.concat_array_to_bottom(arr, self.players[i].get_pixels())
+        players = []
+        results=[]
+        for player in self.players:
+            results.append(player.snake.points)
+        results.sort()
+        results.reverse()
+        for i in range(len(results)):
+            for player in self.players:
+                if results[i]==player.snake.points:
+                    is_new=True
+                    for pl in players:
+                        if player.name==pl.name:
+                            is_new=False
+                            break
+                    if is_new:
+                        players.append(player)
+        for player in players:
+            results.append(player.snake.points)
+        for i in range(len(players)):
+            width = max(width,len(players[i].get_pixels()[0]))
+            arr = library.concat_array_to_bottom(arr, players[i].get_pixels())
         for i in range(len(arr)):
             to_add=width-len(arr[i])
             for j in range(to_add):
