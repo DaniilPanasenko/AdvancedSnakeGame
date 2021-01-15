@@ -58,6 +58,10 @@ class Play:
         if self.check_game_over():
             self.game_over=True
             return
+        for i in range(len(self.snakes)):
+            if self.players[i].is_bot:
+                if not self.snakes[i].isDied:
+                    self.snakes[i].bot(self.settings.items['DIFFICULTY'])
         for sn in self.snakes:
             sn.update()
         for sn in self.snakes:
@@ -107,15 +111,15 @@ class Play:
         snakes = []
         if self.settings.isSinglePlayer:
             snakes.append(snake.Snake(self, 20))
-            players.append(player.Player('ME', True, 20,snakes[len(snakes)-1]))
+            players.append(player.Player('ME', True, 20,snakes[len(snakes)-1],False))
             for i in range(self.settings.items['BOTS']):
                 snakes.append(snake.Snake(self, i + 21))
-                players.append(player.Player('BOT ' + str(i + 1), True, i + 21,snakes[len(snakes)-1]))
+                players.append(player.Player('BOT ' + str(i + 1), True, i + 21,snakes[len(snakes)-1],True))
         else:
             snakes.append(snake.Snake(self, 24))
-            players.append(player.Player(self.settings.items['P1'], False, 24,snakes[len(snakes)-1]))
+            players.append(player.Player(self.settings.items['P1'], False, 24,snakes[len(snakes)-1],False))
             snakes.append(snake.Snake(self, 25))
-            players.append(player.Player(self.settings.items['P2'], False, 25,snakes[len(snakes)-1]))
+            players.append(player.Player(self.settings.items['P2'], False, 25,snakes[len(snakes)-1],False))
         return players, snakes
 
     def get_table(self):

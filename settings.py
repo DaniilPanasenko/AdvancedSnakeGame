@@ -16,6 +16,7 @@ class Settings:
             self.items['P2'] = 'PLAYER2'
         else:
             self.items['BOTS'] = 0
+            self.items['DIFFICULTY'] = 3
 
     def get_pixels(self):
         arr = self.get_array_to_print()
@@ -82,7 +83,7 @@ class Settings:
                     self.items[name] = not self.items[name]
                 if (name == 'SPEED' or name == 'SIZE') and self.items[name] != 1:
                     self.items[name] = self.items[name] - 1
-                if name == 'BOTS' and self.items[name] != 0:
+                if (name =='BOTS' or name=='DIFFICULTY') and self.items[name] != 0:
                     self.items[name] = self.items[name] - 1
         elif key == pygame.K_RIGHT:
             if self.active_element != len(self.items):
@@ -91,6 +92,8 @@ class Settings:
                 if (name == 'SPEED' or name == 'SIZE') and self.items[name] != 10:
                     self.items[name] = self.items[name] + 1
                 if name == 'BOTS' and self.items[name] != 3:
+                    self.items[name] = self.items[name] + 1
+                if name == 'DIFFICULTY' and self.items[name] != 5:
                     self.items[name] = self.items[name] + 1
         elif key == pygame.K_RETURN:
             if self.active_element == len(self.items):

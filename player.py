@@ -2,12 +2,13 @@ import alphabet
 import library
 
 class Player:
-    def __init__(self, name,  in_row, color, snake):
+    def __init__(self, name,  in_row, color, snake, is_bot):
         self.name =name
         self.spells = []
         self.in_row=in_row
         self.color=color
         self.snake = snake
+        self.is_bot=is_bot
 
     def get_pixels(self):
         arr=[]
