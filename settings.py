@@ -2,6 +2,7 @@ import pygame
 import library
 import alphabet
 
+
 class Settings:
     def __init__(self, is_single_player):
         self.isSinglePlayer = is_single_player
@@ -82,7 +83,7 @@ class Settings:
                     self.items[name] = not self.items[name]
                 if (name == 'SPEED' or name == 'SIZE') and self.items[name] != 1:
                     self.items[name] = self.items[name] - 1
-                if (name =='BOTS' or name=='DIFFICULTY') and self.items[name] != 0:
+                if (name == 'BOTS' or name == 'DIFFICULTY') and self.items[name] != 0:
                     self.items[name] = self.items[name] - 1
         elif key == pygame.K_RIGHT:
             if self.active_element != len(self.items):

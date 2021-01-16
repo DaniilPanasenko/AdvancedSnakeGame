@@ -1,4 +1,8 @@
-alphabet = {'A': '0111010001111111000110001',
+alphabet = {'A': '01110'
+                 '10001'
+                 '11111'
+                 '10001'
+                 '10001',
             'B': '1111010001111101000111110',
             'C': '0111010001100001000101110',
             'D': '1111010001100011000111110',
@@ -44,8 +48,8 @@ alphabet = {'A': '0111010001111111000110001',
 
 def translate(string):
     arr = [[], [], [], [], []]
-    for ch in string:
-        letter = alphabet[ch]
+    for char in string:
+        letter = alphabet[char]
         length = int(len(letter) / 5)
         for i in range(5):
             for j in range(length):

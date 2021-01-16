@@ -6,10 +6,10 @@ class Menu:
     def __init__(self, items):
         self.items = items
         self.active = 0
-        self.pixels = self.set_pixels()
+        self.pixels = self.get_pixels()
         self.isActive = True
 
-    def set_pixels(self):
+    def get_pixels(self):
         arr = []
         for i in range(len(self.items)):
             if i == self.active:
@@ -37,7 +37,7 @@ class Menu:
             self.active = self.active - 1
         if not is_up and self.active != len(self.items) - 1:
             self.active = self.active + 1
-        self.pixels = self.set_pixels()
+        self.pixels = self.get_pixels()
 
     def dispose(self):
         self.isActive = False

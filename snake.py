@@ -55,6 +55,17 @@ class Snake:
                 else:
                     self.snail = self.snail - 1
 
+    def check_hit(self, head):
+        if self.check_stone_hit(head):
+            return True
+        if self.check_snake_hit(head):
+            return True
+        if self.check_lava_hit(head):
+            return True
+        if self.check_water_hit(head):
+            return True
+        return False
+
     def check_stone_hit(self, head):
         if head.x == -1 or head.y == -1 or head.x == self.play.biom.size or head.y == self.play.biom.size:
             return True
@@ -95,34 +106,25 @@ class Snake:
                     self.points = self.points + 1
                 break
 
-    def check_hit(self, head):
-        if self.check_stone_hit(head):
-            return True
-        if self.check_snake_hit(head):
-            return True
-        if self.check_lava_hit(head):
-            return True
-        if self.check_water_hit(head):
-            return True
-        return False
-
     def bot(self, difficulty):
-        rand = random.randint(0,10)
-        if rand<=5+difficulty:
+        rand = random.randint(0, 10)
+        if rand <= 5 + difficulty:
             spells_distance = []
             times = []
             points = []
             for spell in self.play.spells.spells:
                 if spell.type == 'POINT':
                     points.append(spell)
-                    spells_distance.append(abs(self.segments[0].x - spell.cell.x) + abs(self.segments[0].y - spell.cell.y))
+                    spells_distance.append(abs(self.segments[0].x - spell.cell.x) +
+                                           abs(self.segments[0].y - spell.cell.y))
                     times.append(spell.time)
             indices = list(range(len(spells_distance)))
-            spells_distance_copy=spells_distance.copy()
+            spells_distance_copy = spells_distance.copy()
             for i in range(len(spells_distance_copy) - 1):
                 for j in range(len(spells_distance_copy) - i - 1):
                     if spells_distance_copy[j] > spells_distance_copy[j + 1]:
-                        spells_distance_copy[j], spells_distance_copy[j + 1] = spells_distance_copy[j + 1], spells_distance_copy[j]
+                        spells_distance_copy[j], spells_distance_copy[j + 1] = \
+                            spells_distance_copy[j + 1], spells_distance_copy[j]
                         indices[j], indices[j + 1] = indices[j + 1], indices[j]
             current_direction = self.direction
             for i in range(len(indices)):
@@ -134,8 +136,8 @@ class Snake:
                         if j == 2:
                             self.change_direction((current_direction - 1) % 4)
                         new_cell = biom.get_cell_by_side(self.segments[0], self.direction)
-                        new_distance = abs(new_cell.x - points[indices[i]].cell.x) + \
-                                       abs(new_cell.y - points[indices[i]].cell.y)
+                        new_distance = (abs(new_cell.x - points[indices[i]].cell.x) +
+                                        abs(new_cell.y - points[indices[i]].cell.y))
                         if new_distance < spells_distance[indices[i]]:
                             if not self.check_hit(new_cell):
                                 choose_point = True
@@ -145,10 +147,10 @@ class Snake:
                     break
             if not self.check_hit(biom.get_cell_by_side(self.segments[0], self.direction)):
                 return
-            if not self.check_hit(biom.get_cell_by_side(self.segments[0], (self.direction+1)%4)):
+            if not self.check_hit(biom.get_cell_by_side(self.segments[0], (self.direction + 1) % 4)):
                 self.change_direction((current_direction + 1) % 4)
                 return
-            if not self.check_hit(biom.get_cell_by_side(self.segments[0], (self.direction-1)%4)):
+            if not self.check_hit(biom.get_cell_by_side(self.segments[0], (self.direction - 1) % 4)):
                 self.change_direction((current_direction - 1) % 4)
                 return
 

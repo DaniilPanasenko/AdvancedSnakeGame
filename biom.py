@@ -1,9 +1,10 @@
 import random
 import cell
 
-STONE=12
-LAVA=11
-WATER=10
+STONE = 12
+LAVA = 11
+WATER = 10
+
 
 def get_cell_by_side(old_cell, side):
     new_cell = cell.Cell(old_cell.x, old_cell.y, old_cell.value)
@@ -31,9 +32,9 @@ class Biom:
             self.generate()
 
     def get_biom_values(self):
-        percent = int(random.uniform(0, 8) * self.size * self.size / 100)
-        count = random.randint(1, 4)
-        return percent, count
+        count_cells = int(random.uniform(0, 8) * self.size * self.size / 100)
+        count_biomes = random.randint(1, 4)
+        return count_cells, count_biomes
 
     def get_biom(self, value):
         count_cells, count_biomes = self.get_biom_values()

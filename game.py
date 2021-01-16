@@ -1,8 +1,6 @@
 import board
 import alphabet
 import menu
-import time
-import keyboard
 import pygame
 import pixel
 import settings
@@ -27,7 +25,6 @@ class Game:
         pygame.mixer.init()
         self.screen = pygame.display.set_mode((self.columns * self.one_pixel, self.rows * self.one_pixel))
         pygame.display.set_caption("Snake")
-        self.load_images()
         self.clock = pygame.time.Clock()
         self.all_sprites = pygame.sprite.Group()
         for j in range(self.rows):
@@ -39,9 +36,6 @@ class Game:
             self.pixels.append(internal)
         self.board = board.Board(self.pixels)
         self.transition_by_menu()
-
-    def load_images(self):
-        self.IMG_POINT = pygame.image.load('img/point.png')
 
     def start_game(self):
         self.initial_frame()
@@ -56,13 +50,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.KEYDOWN:
-                    if self.game_over and event.key==pygame.K_RETURN:
-                        self.enter_game_over()
-                    elif self.active_menu.isActive:
-                        self.handle_menu(event.key)
-                    elif self.settings.isActive:
-                        self.handle_settings(event.key)
-
+                    self.handle_keyboard(event.key)
             self.drawing()
 
     def drawing(self):
@@ -71,19 +59,20 @@ class Game:
         self.all_sprites.draw(self.screen)
         pygame.display.flip()
 
-    def enter_game_over(self):
-        self.board.delete_element('game_over')
-        self.board.delete_element('results')
-        self.pages = []
-        self.transition_by_menu()
-        self.game_over=False
-
     def add_menu(self, items):
         arr = alphabet.translate_with_zoom('SNAKE', 2)
         self.board.add_element('logo', 10, int((self.board.columns - len(arr[0])) / 2), arr)
         main_menu = menu.Menu(items)
         self.board.add_element('menu', 30, int((self.board.columns - len(main_menu.pixels[0])) / 2), main_menu.pixels)
         return main_menu
+
+    def handle_keyboard(self, key):
+        if self.game_over and key == pygame.K_RETURN:
+            self.handle_game_over()
+        elif self.active_menu.isActive:
+            self.handle_menu(key)
+        elif self.settings.isActive:
+            self.handle_settings(key)
 
     def handle_settings(self, key):
         self.settings.press_key(key)
@@ -109,6 +98,13 @@ class Game:
             self.board.delete_element('menu')
             self.pages.append(self.active_menu.items[self.active_menu.active])
             self.transition_by_menu()
+
+    def handle_game_over(self):
+        self.board.delete_element('game_over')
+        self.board.delete_element('results')
+        self.pages = []
+        self.transition_by_menu()
+        self.game_over=False
 
     def play_run(self):
         self.play.run()

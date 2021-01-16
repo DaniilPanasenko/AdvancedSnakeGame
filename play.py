@@ -17,8 +17,7 @@ class Play:
         self.players, self.snakes = self.get_init_players()
         self.spells = spells.Spells(self)
         self.is_stopped = False
-        self.game_over=False
-
+        self.game_over = False
 
     def run(self):
         while True:
@@ -26,19 +25,19 @@ class Play:
                 return
             self.game.clock.tick(self.settings.items['SPEED'])
             events = pygame.event.get()
-            keydown1=None
+            keydown1 = None
             keydown2 = None
             for ev in events:
                 if ev.type == pygame.QUIT:
                     pygame.quit()
                 elif ev.type == pygame.KEYDOWN:
-                    if ev.key==pygame.K_ESCAPE:
+                    if ev.key == pygame.K_ESCAPE:
                         self.is_stopped = True
                         return
-                    if ev.key==pygame.K_RIGHT or ev.key==pygame.K_LEFT or ev.key==pygame.K_UP or ev.key==pygame.K_DOWN:
-                        keydown1=ev
-                    if ev.key==pygame.K_a or ev.key==pygame.K_s or ev.key==pygame.K_w or ev.key==pygame.K_d:
-                        keydown2=ev
+                    if ev.key == pygame.K_RIGHT or ev.key == pygame.K_LEFT or ev.key == pygame.K_UP or ev.key == pygame.K_DOWN:
+                        keydown1 = ev
+                    if ev.key == pygame.K_a or ev.key == pygame.K_s or ev.key == pygame.K_w or ev.key == pygame.K_d:
+                        keydown2 = ev
             if not keydown1 is None:
                 self.press_key(keydown1.key)
             if not keydown2 is None:
@@ -56,7 +55,7 @@ class Play:
 
     def update(self):
         if self.check_game_over():
-            self.game_over=True
+            self.game_over = True
             return
         for i in range(len(self.snakes)):
             if self.players[i].is_bot:
@@ -75,13 +74,13 @@ class Play:
         return True
 
     def press_key(self, key):
-        if key ==pygame.K_UP:
+        if key == pygame.K_UP:
             self.snakes[0].change_direction(0)
-        if key ==pygame.K_RIGHT:
+        if key == pygame.K_RIGHT:
             self.snakes[0].change_direction(1)
-        if key ==pygame.K_DOWN:
+        if key == pygame.K_DOWN:
             self.snakes[0].change_direction(2)
-        if key ==pygame.K_LEFT:
+        if key == pygame.K_LEFT:
             self.snakes[0].change_direction(3)
         if not self.settings.isSinglePlayer:
             if key == pygame.K_w:
@@ -111,66 +110,16 @@ class Play:
         snakes = []
         if self.settings.isSinglePlayer:
             snakes.append(snake.Snake(self, 20))
-            players.append(player.Player('ME', True, 20,snakes[len(snakes)-1],False))
+            players.append(player.Player('ME', True, 20, snakes[len(snakes) - 1], False))
             for i in range(self.settings.items['BOTS']):
                 snakes.append(snake.Snake(self, i + 21))
-                players.append(player.Player('BOT ' + str(i + 1), True, i + 21,snakes[len(snakes)-1],True))
+                players.append(player.Player('BOT ' + str(i + 1), True, i + 21, snakes[len(snakes) - 1], True))
         else:
             snakes.append(snake.Snake(self, 24))
-            players.append(player.Player(self.settings.items['P1'], False, 24,snakes[len(snakes)-1],False))
+            players.append(player.Player(self.settings.items['P1'], False, 24, snakes[len(snakes) - 1], False))
             snakes.append(snake.Snake(self, 25))
-            players.append(player.Player(self.settings.items['P2'], False, 25,snakes[len(snakes)-1],False))
+            players.append(player.Player(self.settings.items['P2'], False, 25, snakes[len(snakes) - 1], False))
         return players, snakes
-
-    def get_table(self):
-        arr = []
-        width=0
-        players = []
-        results=[]
-        for player in self.players:
-            results.append(player.snake.points)
-        results.sort()
-        results.reverse()
-        for i in range(len(results)):
-            for player in self.players:
-                if results[i]==player.snake.points:
-                    is_new=True
-                    for pl in players:
-                        if player.name==pl.name:
-                            is_new=False
-                            break
-                    if is_new:
-                        players.append(player)
-        for player in players:
-            results.append(player.snake.points)
-        for i in range(len(players)):
-            width = max(width,len(players[i].get_pixels()[0]))
-            arr = library.concat_array_to_bottom(arr, players[i].get_pixels())
-        for i in range(len(arr)):
-            to_add=width-len(arr[i])
-            for j in range(to_add):
-                arr[i].append(0)
-        return arr
-
-    def get_biomes(self, arr):
-        for new_cell in self.biom.cells:
-            arr = self.add_cell(arr, new_cell)
-        return arr
-
-    def get_snakes(self,arr):
-        for snake in self.snakes:
-            for new_cell in snake.segments:
-                arr = self.add_cell(arr, new_cell)
-        return arr
-
-    def get_spells(self,arr):
-        for spell in self.spells.spells:
-            arr = self.add_cell(arr, spell.cell)
-        return arr
-
-    def add_cell(self, arr, new_cell):
-        arr[new_cell.x + 1][new_cell.y + 1] = new_cell.value
-        return arr
 
     def get_init_board(self):
         arr = []
@@ -186,3 +135,54 @@ class Play:
             arr[0][i] = 12
             arr[len(arr[i]) - 1][i] = 12
         return arr
+
+    def get_table(self):
+        arr = []
+        width = 0
+        players = []
+        results = []
+        for player in self.players:
+            results.append(player.snake.points)
+        results.sort()
+        results.reverse()
+        for i in range(len(results)):
+            for player in self.players:
+                if results[i] == player.snake.points:
+                    is_new = True
+                    for pl in players:
+                        if player.name == pl.name:
+                            is_new = False
+                            break
+                    if is_new:
+                        players.append(player)
+        for player in players:
+            results.append(player.snake.points)
+        for i in range(len(players)):
+            width = max(width, len(players[i].get_pixels()[0]))
+            arr = library.concat_array_to_bottom(arr, players[i].get_pixels())
+        for i in range(len(arr)):
+            to_add = width - len(arr[i])
+            for j in range(to_add):
+                arr[i].append(0)
+        return arr
+
+    def get_biomes(self, arr):
+        for new_cell in self.biom.cells:
+            arr = self.add_cell(arr, new_cell)
+        return arr
+
+    def get_snakes(self, arr):
+        for snake in self.snakes:
+            for new_cell in snake.segments:
+                arr = self.add_cell(arr, new_cell)
+        return arr
+
+    def get_spells(self, arr):
+        for spell in self.spells.spells:
+            arr = self.add_cell(arr, spell.cell)
+        return arr
+
+    def add_cell(self, arr, new_cell):
+        arr[new_cell.x + 1][new_cell.y + 1] = new_cell.value
+        return arr
+
