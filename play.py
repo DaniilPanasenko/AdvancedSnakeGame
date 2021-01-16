@@ -24,7 +24,7 @@ class Play:
         while True:
             if self.game_over:
                 return
-            self.game.clock.tick(5)
+            self.game.clock.tick(self.settings.items['SPEED'])
             events = pygame.event.get()
             keydown1=None
             keydown2 = None

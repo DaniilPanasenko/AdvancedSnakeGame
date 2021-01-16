@@ -2,7 +2,6 @@ import cell
 import  random
 
 SPELLS = [['POINT',30,False,50,15]]
-ADVANCED_SPELLS=[]
 
 
 class Spells:
@@ -14,11 +13,6 @@ class Spells:
                     self.type=spell[0]
                     self.isRemembered=spell[2]
                     self.time=spell[3]
-            for spell in ADVANCED_SPELLS:
-                if spell[1] == self.cell.value:
-                    self.type = spell[0]
-                    self.isRemembered = spell[2]
-                    self.time = spell[3]
 
     def __init__(self, play):
         self.play=play
@@ -45,19 +39,6 @@ class Spells:
                     if self.check_cell(new_cell):
                         break
                 self.spells.append(self.Spell(new_cell))
-        if self.play.settings.items['SPELLS']:
-            for spell in ADVANCED_SPELLS:
-                rand = random.randint(1, spell[4])
-                if rand == 1:
-                    while True:
-                        x = random.randint(0, self.play.biom.size - 1)
-                        y = random.randint(0, self.play.biom.size - 1)
-                        new_cell = cell.Cell(x, y, spell[1])
-                        if self.check_cell(new_cell):
-                            break
-                    self.spells.append(self.Spell(new_cell))
-
-            
 
 
     def check_cell(self, new_cell):

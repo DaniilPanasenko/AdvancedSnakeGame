@@ -27,17 +27,21 @@ class Game:
         pygame.mixer.init()
         self.screen = pygame.display.set_mode((self.columns * self.one_pixel, self.rows * self.one_pixel))
         pygame.display.set_caption("Snake")
+        self.load_images()
         self.clock = pygame.time.Clock()
         self.all_sprites = pygame.sprite.Group()
         for j in range(self.rows):
             internal = []
             for i in range(self.columns):
-                pxl = pixel.Pixel(i * 10, j * 10)
+                pxl = pixel.Pixel(i * 10, j * 10, self)
                 self.all_sprites.add(pxl)
                 internal.append(pxl)
             self.pixels.append(internal)
         self.board = board.Board(self.pixels)
         self.transition_by_menu()
+
+    def load_images(self):
+        self.IMG_POINT = pygame.image.load('img/point.png')
 
     def start_game(self):
         self.initial_frame()
@@ -73,6 +77,7 @@ class Game:
         self.pages = []
         self.transition_by_menu()
         self.game_over=False
+
     def add_menu(self, items):
         arr = alphabet.translate_with_zoom('SNAKE', 2)
         self.board.add_element('logo', 10, int((self.board.columns - len(arr[0])) / 2), arr)
@@ -109,7 +114,7 @@ class Game:
         self.play.run()
         if self.play.is_stopped:
             self.board.delete_element('play')
-            self.active_menu = self.add_menu(['RETURN', 'RESTART', 'SAVE', 'MENU','EXIT'])
+            self.active_menu = self.add_menu(['RETURN', 'RESTART', 'MENU','EXIT'])
         if self.play.game_over:
             self.board.delete_element('play')
             arr = alphabet.translate_with_zoom('GAME OVER', 3)
@@ -119,10 +124,9 @@ class Game:
                                    results)
             self.game_over=True
 
-
     def transition_by_menu(self):
         if len(self.pages) == 0:
-            self.active_menu = self.add_menu(['NEW GAME', 'CONTINUE', 'EXIT'])
+            self.active_menu = self.add_menu(['NEW GAME', 'EXIT'])
         else:
             page = self.pages[len(self.pages) - 1]
             if page == 'EXIT':

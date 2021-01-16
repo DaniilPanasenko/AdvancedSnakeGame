@@ -6,14 +6,16 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+PURPUR = (255,0,255)
 
 WATER = (0,191,255)
 STONE = (128,128,128)
 LAVA = (255,117,24)
 
 class Pixel(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, game):
         pygame.sprite.Sprite.__init__(self)
+        self.game = game
         self.image = pygame.Surface((10, 10))
         self.image.fill(BLACK)
         self.rect = self.image.get_rect()
@@ -55,5 +57,5 @@ class Pixel(pygame.sprite.Sprite):
             self.image.fill(BLUE)
 
         if self.color == 30:
-            self.image.fill(RED)
+            self.image.fill(PURPUR)
 

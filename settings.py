@@ -8,7 +8,6 @@ class Settings:
         self.active_element = 0
         self.isActive = False
         self.items = {'BIOMES': True,
-                      'SPELLS': True,
                       'SPEED': 5,
                       'SIZE': 5}
         if not self.isSinglePlayer:
@@ -54,7 +53,7 @@ class Settings:
                 key = alphabet.translate_with_color(keys[i] + ': ', 5)
             else:
                 key = alphabet.translate(keys[i] + ': ')
-            if keys[i] == 'BIOMES' or keys[i] == 'SPELLS':
+            if keys[i] == 'BIOMES':
                 if values[i]:
                     value = alphabet.translate_with_color('ON', 2)
                 else:
@@ -79,7 +78,7 @@ class Settings:
                 self.active_element = self.active_element - 1
         elif key == pygame.K_LEFT:
             if self.active_element != len(self.items):
-                if name == 'BIOMES' or name == 'SPELLS':
+                if name == 'BIOMES':
                     self.items[name] = not self.items[name]
                 if (name == 'SPEED' or name == 'SIZE') and self.items[name] != 1:
                     self.items[name] = self.items[name] - 1
@@ -87,7 +86,7 @@ class Settings:
                     self.items[name] = self.items[name] - 1
         elif key == pygame.K_RIGHT:
             if self.active_element != len(self.items):
-                if name == 'BIOMES' or name == 'SPELLS':
+                if name == 'BIOMES':
                     self.items[name] = not self.items[name]
                 if (name == 'SPEED' or name == 'SIZE') and self.items[name] != 10:
                     self.items[name] = self.items[name] + 1
